@@ -175,6 +175,35 @@ a.sign-out-item {
 
 
 /*---------------------------------------------*/
+.filter-menu a {
+  color: #000000;
+}
+
+.filter-text {
+  font-size: 1.1rem;
+  font-weight: 500;
+}
+
+.fas.fa-filter {
+  font-size: 1.5rem;
+}
+
+.filter-list {
+  font-weight: 500;
+  padding-left: 5px;
+}
+
+.dropdown-menu {
+  z-index: 9999;
+  transform: translate3d(45px, 45px, 0px) !important;
+}
+
+#drop-filtered {
+  background-color: #e3e3e3;
+  padding: 3px 4px 3px 4px;
+  border-radius: 10px;
+  display: none;
+}
 
 .container.sort-container {
   padding-top: 3rem;
