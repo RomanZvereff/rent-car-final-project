@@ -1,12 +1,13 @@
 package dao;
 
 import appUtils.db.DBManager;
-import entity.Invoice;
+import entity.*;
 import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.sql.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.concurrent.locks.Lock;
@@ -25,7 +26,41 @@ public class InvoiceDao implements Dao<Invoice> {
 
     @Override
     public List<Invoice> getAll() {
-        return null;
+        List<Invoice> invoiceList = new ArrayList<>();
+        String getAllInvoiceQuery = "select  * from INVOICE;";
+        try(Connection connection = dbManager.getConnection();
+            Statement statement = connection.createStatement()) {
+            ResultSet resultSet = statement.executeQuery(getAllInvoiceQuery);
+            while(resultSet.next()) {
+                Invoice invoice = new Invoice();
+                invoice.setInvoiceId(resultSet.getLong("ID"));
+                invoice.setInvoiceNumber(resultSet.getInt("INVOICE_NUM"));
+
+                int carId = resultSet.getInt("CAR_ID");
+                CarDao carDao = new CarDao();
+                Optional<Car> optionalCar = carDao.get(carId);
+                optionalCar.ifPresent(invoice::setCar);
+
+                long profileId = resultSet.getLong("PROFILE_ID");
+                ProfileDao profileDao = new ProfileDao();
+                Optional<Profile> optionalProfile = profileDao.get(profileId);
+                optionalProfile.ifPresent(invoice::setCustomer);
+
+                invoice.setDescriptionOfDamage(resultSet.getString("DEMG_DESC"));
+                invoice.setAmount(resultSet.getFloat("AMOUNT"));
+                invoice.setAccount(resultSet.getString("IBAN_ACC"));
+
+                long orderId = resultSet.getLong("ORDER_ID");
+                OrderDao orderDao = new OrderDao();
+                Optional<Order> optionalOrder = orderDao.get(orderId);
+                optionalOrder.ifPresent(invoice::setOrder);
+
+                invoiceList.add(invoice);
+            }
+        }catch(SQLException e) {
+            logger.debug(ExceptionUtils.getStackTrace(e));
+        }
+        return invoiceList;
     }
 
     @Override

@@ -41,8 +41,7 @@ public class CarInfoServlet extends HttpServlet {
         HttpSession session = req.getSession();
         Profile profile = (Profile) session.getAttribute("customer");
         Car car = (Car) session.getAttribute("currentCar");
-//        TODO
-//        BranchDao branchDao = new BranchDao();
+
         Order order = new Order();
         order.setOrderNumber(Order.getSaltString());
         order.setCustomer(profile);
@@ -58,7 +57,7 @@ public class CarInfoServlet extends HttpServlet {
 
         order.setCar(car);
         Branch branch = new Branch();
-        branch.setBranchId(1);
+        branch.setBranchId(car.getBranch().getBranchId());
         order.setBranch(branch);
         if("Yes".equals(req.getParameter("needDriver"))) {
             order.setNeedDriver("Yes");

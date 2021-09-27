@@ -49,14 +49,15 @@ public class LogInServlet extends HttpServlet {
             Optional<Profile> optionalProfile = profileDao.getProfileUserId(user.getUserId());
             if(optionalProfile.isPresent()) {
                 profile = optionalProfile.get();
-                session.setAttribute("customer", profile);
+//                session.setAttribute("customer", profile);
             }
             if(user.getUserRole().equals("ADMIN")) {
                 session.setAttribute("admin", profile);
                 resp.sendRedirect(path + "/view/adminPage.jsp");
             }else if(user.getUserRole().equals("MANAGER")) {
                 session.setAttribute("manager", profile);
-                resp.sendRedirect(path + "/view/managerPage.jsp");
+//                resp.sendRedirect(path + "/view/managerPage.jsp");
+                resp.sendRedirect(path + "/managerPage");
             }else if(user.getUserRole().equals("CUSTOMER")) {
                 session.setAttribute("customer", profile);
                 resp.sendRedirect(path + "/view/main.jsp");

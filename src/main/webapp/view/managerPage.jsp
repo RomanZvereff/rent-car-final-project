@@ -1,7 +1,13 @@
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 <%@ page import="entity.Order" %>
 <%@ page import="dao.OrderDao" %>
-<%@ page import="java.util.List" %><%--
+<%@ page import="java.util.List" %>
+<%@ page import="entity.Profile" %>
+<%@ page import="java.util.stream.Stream" %>
+<%@ page import="java.util.stream.Collectors" %>
+<%@ page import="java.util.ArrayList" %>
+<%@ page import="dao.InvoiceDao" %>
+<%@ page import="entity.Invoice" %><%--
   Created by IntelliJ IDEA.
   User: roman
   Date: 24.09.2021
@@ -25,16 +31,33 @@
 <body>
 
 <%
+    Profile profile = (Profile) session.getAttribute("manager");
+    long profileId = profile.getProfileId();
+
     OrderDao orderDao = new OrderDao();
     List<Order> orderList = orderDao.getAll();
+    orderList = orderList.stream().filter(o -> o.getBranch().getProfile().getProfileId() == profileId).collect(Collectors.toList());
+
+    InvoiceDao invoiceDao = new InvoiceDao();
+    List<Invoice> invoiceList = invoiceDao.getAll();
+
+    request.setAttribute("profileId", profileId);
     request.setAttribute("list", orderList);
+    request.setAttribute("invoices", invoiceList);
 %>
 
 <main>
     <div class="container-fluid">
         <div class="container">
-            <div class="page-title">
-                <h1>Manager Panel</h1>
+            <div class="d-flex">
+                <div class="container">
+                    <div class="page-title">
+                        <h1>Manager Panel</h1>
+                    </div>
+                </div>
+                <div class="container text-right" style="padding-top: 2rem;">
+                    <a class="sign-out" href="<%=request.getContextPath()%>/main?signOut=true" style="color: #ff9898; font-size: 1.3rem;">Sign out</a>
+                </div>
             </div>
         </div>
 
@@ -62,33 +85,35 @@
                         <tbody>
 
                         <c:forEach items="${list}" var="order">
-                            <tr>
-                                <td>${order.orderNumber}</td>
-                                <td>
-                                        ${order.customer.firstName} ${order.customer.lastName}
-                                </td>
-                                <td>${order.rentStart.time.toLocaleString().replaceAll('0:00:00', '')}</td>
-                                <td>${order.rentEnd.time.toLocaleString().replaceAll('0:00:00', '')}</td>
-                                <td>
-                                        ${order.car.manufacturer.manufacturerName}
-                                        ${order.car.model.modelName}
-                                </td>
-                                <td>${order.branch.branchName}</td>
-                                <td>${order.needDriver}</td>
-                                <td>${order.totalCost}</td>
-                                <td>${order.status}</td>
-                                <td class="text-nowrap">
-                                    <c:if test="${(order.status eq 'In processing') || (order.status eq 'Confirmed')}">
-                                        <a class="btn btn-success"
-                                           href="<%=request.getContextPath()%>/managerPage?action=confirm&orderId=${order.orderId}">Confirm</a>
-                                        <a class="btn btn-danger"
-                                           href="<%=request.getContextPath()%>/managerPage?action=reject&orderId=${order.orderId}">Reject</a>
-                                        <a class="btn btn-primary"
-                                           href="<%=request.getContextPath()%>/view/createInvoice.jsp?orderId=${order.orderId}">Car
-                                            return</a>
-                                    </c:if>
-                                </td>
-                            </tr>
+                            <c:if test="${profileId == order.branch.profile.profileId}">
+                                <tr>
+                                    <td>${order.orderNumber}</td>
+                                    <td>
+                                            ${order.customer.firstName} ${order.customer.lastName}
+                                    </td>
+                                    <td>${order.rentStart.time.toLocaleString().replaceAll('0:00:00', '')}</td>
+                                    <td>${order.rentEnd.time.toLocaleString().replaceAll('0:00:00', '')}</td>
+                                    <td>
+                                            ${order.car.manufacturer.manufacturerName}
+                                            ${order.car.model.modelName}
+                                    </td>
+                                    <td>${order.branch.branchName}</td>
+                                    <td>${order.needDriver}</td>
+                                    <td>${order.totalCost}</td>
+                                    <td>${order.status}</td>
+                                    <td class="text-nowrap">
+                                        <c:if test="${(order.status eq 'In processing') || (order.status eq 'Confirmed')}">
+                                            <a class="btn btn-success"
+                                               href="<%=request.getContextPath()%>/managerPage?action=confirm&orderId=${order.orderId}">Confirm</a>
+                                            <a class="btn btn-danger"
+                                               href="<%=request.getContextPath()%>/managerPage?action=reject&orderId=${order.orderId}">Reject</a>
+                                            <a class="btn btn-primary"
+                                               href="<%=request.getContextPath()%>/view/createInvoice.jsp?orderId=${order.orderId}">Car
+                                                return</a>
+                                        </c:if>
+                                    </td>
+                                </tr>
+                            </c:if>
                         </c:forEach>
                         </tbody>
                     </table>
@@ -106,40 +131,26 @@
                             <th>ORDER NUMBER</th>
                             <th>DAMAGE DESCRIPTION</th>
                             <th>AMOUNT</th>
-                            <th>ORDER STATUS</th>
-                            <th>PAYMENT DETAILS</th>
+                            <th>IBAN ACCOUNT</th>
                         </tr>
                         </thead>
                         <tbody>
 
-                        <c:forEach items="${list}" var="order">
-                            <tr>
-                                <td>${order.orderNumber}</td>
-                                <td>
-                                        ${order.customer.firstName} ${order.customer.lastName}
-                                </td>
-                                <td>${order.rentStart.time.toLocaleString().replaceAll('0:00:00', '')}</td>
-                                <td>${order.rentEnd.time.toLocaleString().replaceAll('0:00:00', '')}</td>
-                                <td>
-                                        ${order.car.manufacturer.manufacturerName}
-                                        ${order.car.model.modelName}
-                                </td>
-                                <td>${order.branch.branchName}</td>
-                                <td>${order.needDriver}</td>
-                                <td>${order.totalCost}</td>
-                                <td>${order.status}</td>
-                                <td class="text-nowrap">
-                                    <c:if test="${(order.status eq 'Processed') || (order.status eq 'Confirmed')}">
-                                        <a class="btn btn-success"
-                                           href="<%=request.getContextPath()%>/managerPage?action=confirm&orderId=${order.orderId}">Confirm</a>
-                                        <a class="btn btn-danger"
-                                           href="<%=request.getContextPath()%>/managerPage?action=reject&orderId=${order.orderId}">Reject</a>
-                                        <a class="btn btn-primary"
-                                           href="<%=request.getContextPath()%>/view/createInvoice.jsp?orderId=${order.orderId}">Car
-                                            return</a>
-                                    </c:if>
-                                </td>
-                            </tr>
+                        <c:forEach items="${invoices}" var="invoice">
+                            <c:forEach items="${list}" var="order">
+                                <c:if test="${invoice.order.orderId == order.orderId}">
+                                    <tr>
+                                        <td>${invoice.invoiceNumber}</td>
+                                        <td>
+                                                ${invoice.customer.firstName} ${invoice.customer.lastName}
+                                        </td>
+                                        <td>${invoice.order.orderNumber}</td>
+                                        <td>${invoice.descriptionOfDamage}</td>
+                                        <td>${invoice.amount}</td>
+                                        <td>${invoice.account}</td>
+                                    </tr>
+                                </c:if>
+                            </c:forEach>
                         </c:forEach>
                         </tbody>
                     </table>
