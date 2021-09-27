@@ -35,7 +35,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="<%=request.getContextPath()%>/contact.jsp">
+                            <a class="nav-link" href="<%=request.getContextPath()%>/templates/contact_us.html">
                                 <i class="fas fa-phone"></i> Contact us
                             </a>
                         </li>

@@ -15,7 +15,7 @@ public class DBManager {
 
     private static final Logger logger = LogManager.getLogger(DBManager.class);
     private static DBManager dbManager;
-    private static String url, user, pass;
+    private static String url, user, pass, driver;
 
     private DBManager() {
         Properties properties = new Properties();
@@ -25,6 +25,7 @@ public class DBManager {
             url = properties.getProperty("db.connection");
             user = properties.getProperty("user");
             pass = properties.getProperty("password");
+            driver = properties.getProperty("driver");
         }catch(IOException e) {
             logger.debug(ExceptionUtils.getStackTrace(e));
         }
@@ -39,7 +40,7 @@ public class DBManager {
 
     public Connection getConnection() {
         try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
+            Class.forName(driver);
             return DriverManager.getConnection(url, user, pass);
         }catch(SQLException | ClassNotFoundException e) {
             logger.debug(ExceptionUtils.getStackTrace(e));
