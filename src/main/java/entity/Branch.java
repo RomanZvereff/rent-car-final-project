@@ -1,8 +1,9 @@
 package entity;
 
+import java.io.Serializable;
 import java.util.List;
 
-public class Branch {
+public class Branch implements Serializable {
 
     private int branchId;
     private String branchName;

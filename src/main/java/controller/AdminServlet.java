@@ -41,11 +41,9 @@ public class AdminServlet extends HttpServlet {
                 deleteCar(request, response);
                 adminPath = path + "/view/adminPage.jsp?show=cars";
                 break;
-
-
         }
-        dispatcher = request.getRequestDispatcher(adminPath);
-        dispatcher.forward(request, response);
+
+        response.sendRedirect(adminPath);
 
     }
 
@@ -61,23 +59,26 @@ public class AdminServlet extends HttpServlet {
         switch(formType) {
             case "createBranch":
                 createBranch(request, response);
-                adminPath = "/view/adminPage.jsp?show=branches";
+                adminPath = path + "/view/adminPage.jsp?show=branches";
                 break;
             case "updateBranch":
                 updateBranch(request, response);
-                adminPath = "/view/adminPage.jsp?show=branches";
+                adminPath = path + "/view/adminPage.jsp?show=branches";
                 break;
             case "createManager":
                 createManager(request, response);
-                adminPath = "/view/adminPage.jsp?show=managers";
+                adminPath = path + "/view/adminPage.jsp?show=managers";
                 break;
             case "createCar":
                 createCar(request, response);
-                adminPath = "/view/adminPage.jsp?show=cars";
+                adminPath = path + "/view/adminPage.jsp?show=cars";
+                break;
+            case "updateCar":
+                updateCar(request, response);
+                adminPath = path + "/view/adminPage.jsp?show=cars";
                 break;
         }
-        dispatcher = request.getRequestDispatcher(adminPath);
-        dispatcher.forward(request, response);
+        response.sendRedirect(adminPath);
 
     }
 
@@ -177,6 +178,18 @@ public class AdminServlet extends HttpServlet {
         carDao.create(car);
 
         uploadCarImage(request, response, filePart);
+    }
+
+    private void updateCar(HttpServletRequest request, HttpServletResponse response) {
+        Car car = (Car) request.getSession().getAttribute("carObj");
+        String carLvl = request.getParameter("carLvlName");
+        String carEngine = request.getParameter("carEngine");
+        String fuelConsumption = request.getParameter("fuelConsumption");
+        String prodYear = request.getParameter("prodYear");
+        String carPrice = request.getParameter("carPrice");
+        String[] params = {carLvl, carEngine, fuelConsumption, prodYear, carPrice};
+        CarDao carDao = new CarDao();
+        carDao.update(car, params);
     }
 
     private void deleteCar(HttpServletRequest request, HttpServletResponse response) {

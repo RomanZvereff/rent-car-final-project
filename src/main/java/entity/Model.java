@@ -1,6 +1,8 @@
 package entity;
 
-public class Model {
+import java.io.Serializable;
+
+public class Model implements Serializable {
 
     private int modelId;
     private String modelName;

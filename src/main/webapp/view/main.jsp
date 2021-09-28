@@ -66,7 +66,7 @@
                 <i class="fas fa-filter"></i><span class="filter-text">  Filter </span><i class="fas fa-caret-down"></i>
             </a>
             <span id="drop-filtered"><span class="filtered"> drop filter </span><i class="far fa-times-circle"></i></span>
-            <div class="dropdown-menu" aria-labelledby="dropdownFilterMenu">
+            <div class="dropdown-menu filter-mn" aria-labelledby="dropdownFilterMenu">
                 <span class="filter-list">car class: </span>
                 <button id="econom" class="dropdown-item filter-menu-item">econom</button>
                 <button id="standard" class="dropdown-item filter-menu-item">standard</button>

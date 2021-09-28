@@ -61,7 +61,6 @@ public class InvoiceServlet extends HttpServlet {
         InvoiceDao invoiceDao = new InvoiceDao();
         invoiceDao.create(invoice);
 
-        RequestDispatcher dispatcher = request.getRequestDispatcher(path + "/view/managerPage.jsp");
-        dispatcher.forward(request, response);
+        response.sendRedirect(path + "/managerPage");
     }
 }

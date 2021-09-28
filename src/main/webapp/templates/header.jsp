@@ -42,7 +42,6 @@
                     </ul>
                 </div>
 
-
                 <c:choose>
                     <c:when test="${sessionScope.customer != null}">
                         <div class="nav-right text-sm-center">
@@ -50,7 +49,7 @@
                                 <li class="nav-item">
                                     <div class="dropdown show">
                                         <a class="nav-link " href="#" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                            <i class="fas fa-user"></i> ${customer.firstName} <i class="fas fa-caret-down"></i>
+                                            <i class="fas fa-user"></i> ${customer.firstName}<i class="fas fa-caret-down"></i>
                                         </a>
 
                                         <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">

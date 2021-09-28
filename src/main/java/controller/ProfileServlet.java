@@ -22,6 +22,7 @@ public class ProfileServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+        String path = getServletContext().getContextPath();
         ProfileDao profileDao = new ProfileDao();
         HttpSession session = req.getSession();
         Profile profile = (Profile) session.getAttribute("customer");
@@ -38,6 +39,6 @@ public class ProfileServlet extends HttpServlet {
             newProfile.setUser(profile.getUser());
             session.setAttribute("customer", newProfile);
         }
-        resp.sendRedirect("/view/profile.jsp");
+        resp.sendRedirect(path + "/view/profile.jsp");
     }
 }

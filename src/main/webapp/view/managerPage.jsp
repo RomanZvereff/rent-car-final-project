@@ -102,15 +102,19 @@
                                     <td>${order.totalCost}</td>
                                     <td>${order.status}</td>
                                     <td class="text-nowrap">
-                                        <c:if test="${(order.status eq 'In processing') || (order.status eq 'Confirmed')}">
-                                            <a class="btn btn-success"
-                                               href="<%=request.getContextPath()%>/managerPage?action=confirm&orderId=${order.orderId}">Confirm</a>
-                                            <a class="btn btn-danger"
-                                               href="<%=request.getContextPath()%>/managerPage?action=reject&orderId=${order.orderId}">Reject</a>
-                                            <a class="btn btn-primary"
-                                               href="<%=request.getContextPath()%>/view/createInvoice.jsp?orderId=${order.orderId}">Car
-                                                return</a>
-                                        </c:if>
+                                        <c:choose>
+                                            <c:when test="${(order.status eq 'In processing')}">
+                                                <a class="btn btn-success"
+                                                   href="<%=request.getContextPath()%>/managerPage?action=confirm&orderId=${order.orderId}">Confirm</a>
+                                                <a class="btn btn-danger"
+                                                   href="<%=request.getContextPath()%>/managerPage?action=reject&orderId=${order.orderId}">Reject</a>
+                                            </c:when>
+                                            <c:when test="${(order.status eq 'Confirmed')}">
+                                                <a class="btn btn-primary"
+                                                   href="<%=request.getContextPath()%>/view/createInvoice.jsp?orderId=${order.orderId}">Car
+                                                    return</a>
+                                            </c:when>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:if>

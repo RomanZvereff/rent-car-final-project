@@ -96,7 +96,7 @@
                 <hr>
                 <ul>
                     <li>
-                        <a class="side-menu-item" href="<%=request.getContextPath()%>/view/adminPage.jsp?show=customers">Customers</a>
+                        <a class="side-menu-item" href="<%=request.getContextPath()%>/view/adminPage.jsp?show=customers">Users</a>
                     </li>
                     <li>
                         <a class="side-menu-item" href="<%=request.getContextPath()%>/view/adminPage.jsp?show=managers">Managers</a>
@@ -116,7 +116,7 @@
                 <div>
                     <ul>
                         <li>
-                            <a href="<%=request.getContextPath()%>/view/main.jsp">Home page</a>
+                            <a href="<%=request.getContextPath()%>/main">Home page</a>
                         </li>
                     </ul>
                 </div>
@@ -160,7 +160,7 @@
                                     <div class="col-sm-12 col-md-4 cr-input-bl">
                                         <label>User password:</label>
                                         <label>
-                                            <input class="form-control editable" type="text" name="userPassword" required>
+                                            <input class="form-control editable" type="password" name="userPassword" required>
                                         </label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 cr-input-bl">
@@ -274,13 +274,13 @@
                                     <div class="col-sm-12 col-md-4 cr-input-bl">
                                         <label>Engine:</label>
                                         <label>
-                                            <input class="form-control editable" type="number" step="0.05" name="engine" required>
+                                            <input class="form-control editable" type="number" step="0.01" name="engine" required>
                                         </label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 cr-input-bl">
                                         <label>Fuel consumption:</label>
                                         <label>
-                                            <input class="form-control editable" type="number" step="0.05" name="fuelConsumption" required>
+                                            <input class="form-control editable" type="number" step="0.01" name="fuelConsumption" required>
                                         </label>
                                     </div>
                                     <div class="col-sm-12 col-md-4 cr-input-bl">
@@ -377,7 +377,6 @@
                                     <th>LAST_NAME</th>
                                     <th>PHONE_NUM</th>
                                     <th>EMAIL</th>
-                                    <th>ACTIONS</th>
                                 </c:when>
 
                                 <c:when test="${param.show eq 'cars'}">
@@ -414,7 +413,6 @@
                                     <th>NEED_DRIVER</th>
                                     <th>TOTAL_COST</th>
                                     <th>ORDER_STATUS</th>
-                                    <th>ACTIONS</th>
                                 </c:when>
 
                                 <c:when test="${param.show eq 'branches'}">
@@ -441,20 +439,6 @@
                                         <td>${profile.lastName}</td>
                                         <td>${profile.phoneNumber}</td>
                                         <td>${profile.email}</td>
-                                        <td>
-                                            <c:choose>
-                                                <c:when test="${param.show eq 'customers'}">
-                                                    <a class="btn btn-primary" href="">Update</a>
-                                                    <a class="btn btn-danger" href="">Delete</a>
-                                                </c:when>
-                                            </c:choose>
-                                            <c:choose>
-                                                <c:when test="${param.show eq 'managers'}">
-                                                    <a class="btn btn-primary" href="">Update</a>
-                                                    <a class="btn btn-danger" href="">Delete</a>
-                                                </c:when>
-                                            </c:choose>
-                                        </td>
                                     </tr>
                                 </c:forEach>
                             </c:when>
@@ -478,7 +462,8 @@
                                         <td>${car.branch.address}</td>
                                         <td>${car.price}</td>
                                         <td class="text-nowrap">
-                                            <a class="btn btn-primary" href="">Update</a>
+                                            <a class="btn btn-primary"
+                                               href="<%=request.getContextPath()%>/view/updatePage.jsp?update=updateCar&carId=${car.carId}">Update</a>
                                             <a class="btn btn-danger" href="<%=request.getContextPath()%>/adminPage?action=carDelete&carId=${car.carId}">Delete</a>
                                         </td>
                                     </tr>
@@ -504,10 +489,6 @@
                                         <td>${order.needDriver}</td>
                                         <td>${order.totalCost}</td>
                                         <td>${order.status}</td>
-                                        <td class="text-nowrap">
-                                            <a class="btn btn-primary" href="">Update</a>
-                                            <a class="btn btn-danger" href="">Delete</a>
-                                        </td>
                                     </tr>
                                 </c:forEach>
                             </c:when>

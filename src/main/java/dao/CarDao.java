@@ -176,7 +176,7 @@ public class CarDao implements Dao<Car> {
                 carList.add(car);
             }
         }catch(SQLException e) {
-//            logger.debug(ExceptionUtils.getStackTrace(e));
+            logger.debug(ExceptionUtils.getStackTrace(e));
         }
         return carList;
     }
@@ -188,7 +188,7 @@ public class CarDao implements Dao<Car> {
         CONNECTION_LOCK.lock();
         String createCarQuery = "insert into CARS values (?,?,?,?,?,?,?,?,?,?,?,?,?)";
         try(Connection connection = dbManager.getConnection();
-            PreparedStatement preparedStatement = connection.prepareStatement(createCarQuery)) {
+            PreparedStatement preparedStatement = connection.prepareStatement(createCarQuery, Statement.RETURN_GENERATED_KEYS)) {
             preparedStatement.setNull(1, Types.INTEGER);
             preparedStatement.setInt(2, car.getManufacturer().getManufacturerId());
             preparedStatement.setInt(3, car.getModel().getModelId());
@@ -208,7 +208,7 @@ public class CarDao implements Dao<Car> {
                 carId = generatedKeys.getInt(1);
             }
         }catch(SQLException e) {
-//            logger.debug(ExceptionUtils.getStackTrace(e));
+            logger.debug(ExceptionUtils.getStackTrace(e));
         }
         return carId;
     }
@@ -216,21 +216,20 @@ public class CarDao implements Dao<Car> {
     @Override
     public void update(Car car, String[] params) {
         CONNECTION_LOCK.lock();
-        String updateCarQuery = "update CARS set ENGINE=?, FUEL_CONSUM=?, PROD_YEAR=?, PRICE=?, IMG_NAME=? where ID=?";
+        String updateCarQuery = "update CARS set CAR_LVL_ID=?, ENGINE=?, FUEL_CONSUM=?, PROD_YEAR=?, PRICE=? where ID=?";
         try(Connection connection = dbManager.getConnection();
             PreparedStatement preparedStatement = connection.prepareStatement(updateCarQuery)) {
-            preparedStatement.setDouble(1, Double.parseDouble(params[0]));
-            preparedStatement.setDouble(2, Double.parseDouble(params[1]));
-            preparedStatement.setInt(3, Integer.parseInt(params[2]));
-            preparedStatement.setDouble(4, Double.parseDouble(params[3]));
-            preparedStatement.setDouble(5, Double.parseDouble(params[4]));
-            preparedStatement.setDouble(6, car.getCarId());
+            preparedStatement.setInt(1, CarLevel.valueOf(params[0]).getLevel());
+            preparedStatement.setFloat(2, Float.parseFloat(params[1]));
+            preparedStatement.setFloat(3, Float.parseFloat(params[2]));
+            preparedStatement.setInt(4, Integer.parseInt(params[3]));
+            preparedStatement.setFloat(5, Float.parseFloat(params[4]));
+            preparedStatement.setInt(6, car.getCarId());
             preparedStatement.executeUpdate();
-            preparedStatement.close();
             CONNECTION_LOCK.unlock();
         }catch(SQLException e) {
             CONNECTION_LOCK.unlock();
-//            logger.debug(ExceptionUtils.getStackTrace(e));
+            logger.debug(ExceptionUtils.getStackTrace(e));
         }
     }
 
@@ -245,7 +244,7 @@ public class CarDao implements Dao<Car> {
             CONNECTION_LOCK.unlock();
         }catch(SQLException e) {
             CONNECTION_LOCK.unlock();
-//            logger.debug(ExceptionUtils.getStackTrace(e));
+            logger.debug(ExceptionUtils.getStackTrace(e));
         }
     }
 
